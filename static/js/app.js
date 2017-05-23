@@ -1,6 +1,6 @@
-var app = angular.module('owner', []);
+var app = angular.module('app', []);
 
-app.controller('ownerController', function($scope) {
+app.controller('controller', function($scope) {
     var socket = io.connect('https://' + document.domain + ':' + location.port);
     
     $scope.loggedIn = false;
@@ -8,10 +8,6 @@ app.controller('ownerController', function($scope) {
     socket.on('connect', function() {
         console.log('connected');
     });
-    
-    $scope.test = function(){
-        console.log("Entered $scope.test");
-    };
     
     
     
