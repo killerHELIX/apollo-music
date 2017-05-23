@@ -1,17 +1,17 @@
-var owner = angular.module('owner', ["ngRoute"]);
+var app = angular.module('owner', []);
 
-owner.controller('ownerController', function($scope, $sce) {
+app.controller('ownerController', function($scope) {
     var socket = io.connect('https://' + document.domain + ':' + location.port);
     
     $scope.loggedIn = false;
     
     socket.on('connect', function() {
         console.log('connected');
-    }))
+    });
     
     $scope.test = function(){
         console.log("Entered $scope.test");
-    }
+    };
     
     
     
