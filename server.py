@@ -15,9 +15,19 @@ def makeConnection():
     print('Connected.')
     
 @app.route('/', methods=['GET', 'POST'])
-def mainIndex():
+def renderIndex():
     print(request.method)
     return render_template('index.html')
+    
+@app.route('/listener.html', methods=['GET', 'POST'])
+def renderUser():
+    print(request.method)
+    return render_template('listener.html')
+    
+@app.route('/owner.html', methods=['GET', 'POST'])
+def renderSuper():
+    print(request.method)
+    return render_template('owner.html')
     
 # start the server
 if __name__ == '__main__':
