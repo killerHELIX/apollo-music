@@ -10,30 +10,6 @@
     </header>
     
    <!-- Modal -->
-<div id="loginModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Login</h4>
-      </div>
-      <div class="modal-body">
-        <p>Some text in the modal.</p>
-        <label for="username">Username:</label>
-        <input type="text" class="form-control" id="username">
-        </br>
-        <label for="password">Password:</label>
-        <input type="text" class="form-control" id="password">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Submit</button>
-      </div>
-    </div>
-
-  </div>
-</div>
 
     <!-- About -->
     <section id="about" class="about">
@@ -42,41 +18,73 @@
                 <h2>Current Playlist</h2>
             <p class="lead">Playback here is synchronized across all listeners.</p>
                 
+                <!-- Now Playing -->
                 <div class="col-md-3">
                     <h4>Now Playing</h4>
                     <hr class="large"/>
-                    <p>TODO: Show current track. Can Skip or force Looping.</p>
+                    <table class="table text-left">
+                            <tr ng-bind="nowPlaying" ng-show="nowPlaying.title != 'None'">
+                                <td ng-bind="nowPlaying.track"></td>
+                                <td ng-bind="nowPlaying.style"></td>
+                                <td>
+                                    <button type="button" class="btn-queue btn-default btn-xs fa fa-play"/>
+                                    <button type="button" class="btn-queue btn-default btn-xs fa fa-remove"/>
+                                </td>
+                            </tr>
+                    </table>
                 </div>
+                
+                <!-- Queue -->
                 <div class="col-md-3">
                     <h4>Queue</h4>
                     <hr class="large"/>
-                    <p>TODO: Show queue.  Allow removal of existing tracks or addition of new ones.</p>
+                    <table class="table text-left">
+                            <tr ng-repeat="entry in queue.slice().reverse() track by $index">
+                                <td ng-bind="entry.track"></td>
+                                <td ng-bind="entry.style"></td>
+                                <td>
+                                    <button type="button" class="btn-queue btn-default btn-xs fa fa-play" ng-click="play(entry)"/>
+                                    <button type="button" class="btn-queue btn-default btn-xs fa fa-remove"/>
+                                </td>
+                            </tr>
+                    </table>
                 </div>
+                
+                <!-- Select Track -->
                 <div class="col-md-3">
                     <h4>Select</h4>
                     <hr class="large"/>
                     <div class="row text-center">
                         <div class="col-2 btn-group">
-                            <button type="button" class="btn btn-default btn-lg">A3</button>
-                            <button type="button" class="btn btn-default btn-lg">B3</button>
-                            <button type="button" class="btn btn-default btn-lg">C3</button>
+                            <button id="A3" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">A3</button>
+                            <button id="B3" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">B3</button>
+                            <button id="C3" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">C3</button>
                         </div></br>
                         <div class="col-2 btn-group">
-                            <button type="button" class="btn btn-default btn-lg">A2</button>
-                            <button type="button" class="btn btn-default btn-lg">B2</button>
-                            <button type="button" class="btn btn-default btn-lg">C2</button>
+                            <button id="A2" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">A2</button>
+                            <button id="B2" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">B2</button>
+                            <button id="C2" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">C2</button>
                         </div></br>
                         <div class="col-2 btn-group">
-                            <button type="button" class="btn btn-default btn-lg">A1</button>
-                            <button type="button" class="btn btn-default btn-lg">B1</button>
-                            <button type="button" class="btn btn-default btn-lg">C1</button>
+                            <button id="A1" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">A1</button>
+                            <button id="B1" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">B1</button>
+                            <button id="C1" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">C1</button>
                         </div></br>
                     </div>
                 </div>
+                
+                <!-- Track Information -->
                 <div class="col-md-3">
                     <h4>Info</h4>
                     <hr class="large"/>
                     <p>TODO: Show loops of selected track.  Allow addition of loop or entire track to queue.</p>
+                    <h5 ng-show="selectedTrack == 'None'">Select a track!</h5>
+                    <h5 ng-show="selectedTrack != 'None'">Track: {{ '{{selectedTrack}}' }}</h5>
+                    <video class="btn btn-default btn-lg img-responsive" onclick="this.paused ? this.play() : this.pause();">
+                        <source type="video/webm" src="static/media/RickRoll.webm">
+                    </video>
+                    <button type="button" class="btn btn-default" ng-click="addToQueue(selectedTrack)">Add to queue</button>
+
                 </div>
             </div>
             <!-- /.row -->
