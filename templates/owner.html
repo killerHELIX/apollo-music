@@ -1,4 +1,5 @@
 {% extends "layout.html" %} {% block content %}
+
     <!-- Header -->
     <header id="top" class="header">
         <div class="text-vertical-center">
@@ -8,8 +9,6 @@
             
         </div>
     </header>
-    
-   <!-- Modal -->
 
     <!-- About -->
     <section id="about" class="about">
@@ -17,19 +16,27 @@
             <div class="row text-center">
                 <h2>Current Playlist</h2>
             <p class="lead">Playback here is synchronized across all listeners.</p>
-                
+            
                 <!-- Now Playing -->
                 <div class="col-md-3">
                     <h4>Now Playing</h4>
                     <hr class="large"/>
-                    <table class="table text-left">
-                            <tr ng-bind="nowPlaying" ng-show="nowPlaying.title != 'None'">
-                                <td ng-bind="nowPlaying.track"></td>
-                                <td ng-bind="nowPlaying.style"></td>
+                    <table class="table text-left" ng-show="nowPlaying.title != 'None'">
+                        <audio id="nowPlaying" src="static/media/Prismo.webm"></audio>
+                            <tr>
                                 <td>
-                                    <button type="button" class="btn-queue btn-default btn-xs fa fa-play"/>
-                                    <button type="button" class="btn-queue btn-default btn-xs fa fa-remove"/>
+                                    <a id="nowPlayingSelector" class="btn btn-default btn-lg fa fa-play" onclick="playPause()"></a>
                                 </td>
+                                <td>
+                                    
+                                </td>
+                                <td>
+                                    <input type="range" min="0" max="100" value="100">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td ng-bind="nowPlaying.title"></td>
+                                <td ng-bind="nowPlaying.genre"></td>
                             </tr>
                     </table>
                 </div>
@@ -40,11 +47,13 @@
                     <hr class="large"/>
                     <table class="table text-left">
                             <tr ng-repeat="entry in queue.slice().reverse() track by $index">
-                                <td ng-bind="entry.track"></td>
-                                <td ng-bind="entry.style"></td>
+                                <td><strong>{{ '{{ entry.title }}' }}</strong></td>
+                                <td>{{ '{{ entry.genre }}' }}</td>
                                 <td>
-                                    <button type="button" class="btn-queue btn-default btn-xs fa fa-play" ng-click="play(entry)"/>
-                                    <button type="button" class="btn-queue btn-default btn-xs fa fa-remove"/>
+                                    <i class="btn-queue btn-default btn-xs fa fa-play" ng-click="play(entry)"/>
+                                </td>
+                                <td>
+                                    <i class="btn-queue btn-default btn-xs fa fa-remove"/>
                                 </td>
                             </tr>
                     </table>
@@ -78,12 +87,12 @@
                     <h4>Info</h4>
                     <hr class="large"/>
                     <p>TODO: Show loops of selected track.  Allow addition of loop or entire track to queue.</p>
-                    <h5 ng-show="selectedTrack == 'None'">Select a track!</h5>
-                    <h5 ng-show="selectedTrack != 'None'">Track: {{ '{{selectedTrack}}' }}</h5>
-                    <video class="btn btn-default btn-lg img-responsive" onclick="this.paused ? this.play() : this.pause();">
-                        <source type="video/webm" src="static/media/RickRoll.webm">
-                    </video>
-                    <button type="button" class="btn btn-default" ng-click="addToQueue(selectedTrack)">Add to queue</button>
+                    <h5 ng-show="selectedTrack.title == 'None'">Select a track!</h5>
+                    <h5 ng-show="selectedTrack.title != 'None'">Track: {{ '{{selectedTrack.title}}' }}</h5>
+                    <audio id="preview" src="static/media/RickRoll.webm"></audio>
+                    <button class="btn btn-default btn-lg img-reponsive" onclick="document.getElementById('preview').paused ? document.getElementById('preview').play() : document.getElementById('preview').pause();"></button>
+                    <br/> <br/>
+                    <button type="button" class="btn btn-default" ng-show="selectedTrack.title != 'None'" ng-click="push(selectedTrack)">Add to queue</button>
 
                 </div>
             </div>

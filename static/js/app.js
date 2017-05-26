@@ -1,17 +1,19 @@
 var app = angular.module('app', []);
 
-app.controller('controller', function($scope) {
+app.controller('controller', function($scope, $sce) {
     var socket = io.connect('https://' + document.domain + ':' + location.port);
     
     $scope.loggedIn = false;
-    $scope.nowPlaying = {
+    $scope.selectedTrack = {
         title: "None",
-        style: "None",
+        genre: "None",
+        url: "None",
         id: 0,
     };
     $scope.nowPlaying = {
         title: "None",
-        style: "None",
+        genre: "None",
+        url: "None",
         id: 0,
     };
     
@@ -46,28 +48,54 @@ app.controller('controller', function($scope) {
         console.log("Received " + id);
         
         // set selected track
-        $scope.selectedTrack = id;
+        $scope.selectedTrack.title = id;
     };
     
-    $scope.addToQueue = function(selectedTrack) {
+    $scope.push = function() {
         console.log("Entered $scope.addToQueue on scope.js");
-        $scope.queue.push({
-            track: selectedTrack,
-            style: "Style: Chosen at Info",
-            id: $scope.uniqueQueueID,    
+        switch($scope.selectedTrack.title){
+            case 'A3':
+                $scope.queue.push({
+                    title: $scope.selectedTrack.title,
+                    genre: "genre",
+                    id: $scope.uniqueQueueID,
+                    url: "static/media/LetGoArkPatrol.webm",
+                });
+                $scope.uniqueQueueID++;
+                break;
+            
+            case 'B1':
+                $scope.queue.push({
+                    title: $scope.selectedTrack.title,
+                    genre: "genre",
+                    id: $scope.uniqueQueueID,
+                    url: "static/media/Prismo.webm",
+                });
+                $scope.uniqueQueueID++;
+                break;
+                
+            default:
+                $scope.queue.push({
+                    title: $scope.selectedTrack.title,
+                    genre: "genre",
+                    id: $scope.uniqueQueueID,
+                    url: "static/media/RickRoll.webm",
             });
-        $scope.uniqueQueueID++;
+            $scope.uniqueQueueID++;
+            break;   
+                
+        }
+        
+        
         console.log("$scope.queue entries: ");
         for (let i=0; i < $scope.queue.length; i++){
-            console.log($scope.queue[i].track + ", " + $scope.queue[i].id);
+            console.log($scope.queue[i].title + ", " + $scope.queue[i].genre + ", " + $scope.queue[i].url + ", " + $scope.queue[i].id);
         }
     };
     
     // Plays selected track without removing from the queue
     $scope.play = function(track){
-        console.log("Entered $scope.play on app.js, param " + track.title);
+        console.log("Entered $scope.play on app.js, params: " + track.title + ", " + track.genre + ", " + track.url + ", " + track.id);
         $scope.nowPlaying = track;
-    }
-    
-    
+    };
 });
