@@ -13,15 +13,27 @@ app.controller('controller', function($scope, $sce) {
     $scope.nowPlaying = {
         title: "None",
         genre: "None",
-        url: "None",
+        url: "static/media/RickRoll.webm",
         id: 0,
+    };
+    
+    $scope.nowPlayingSrc = $scope.nowPlaying.url;
+    
+    $scope.trustedUrl = function(url) {
+        return $sce.trustAsResourceUrl(url);
     };
     
     $scope.queue = [];
     $scope.uniqueQueueID = 1;
     
+    $scope.volume = 1;
+    
     socket.on('connect', function() {
         console.log('connected');
+        console.log('$scope.nowPlaying.url: ' + $scope.nowPlaying.url);
+        console.log("path: " + $scope.nowPlayingSrc);
+        console.log("audio path: " + document.getElementById('nowPlaying').src);
+
     });
     
     // changes loggedIn to true
@@ -97,5 +109,20 @@ app.controller('controller', function($scope, $sce) {
     $scope.play = function(track){
         console.log("Entered $scope.play on app.js, params: " + track.title + ", " + track.genre + ", " + track.url + ", " + track.id);
         $scope.nowPlaying = track;
+        
+        // load new url to player
+        $scope.updatePlayer('nowPlaying', track);
+        var player = document.getElementById('nowPlaying');
+        // player.load();
+        console.log("audio path: " + document.getElementById('nowPlaying').src);
+
+
     };
+    
+    // updates and reloads player with new track
+    $scope.updatePlayer = function(id, track) {
+        var player = document.getElementById(id);
+        player.src = track.url;
+        player.load();
+    }
 });
