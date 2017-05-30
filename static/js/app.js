@@ -105,6 +105,23 @@ app.controller('controller', function($scope, $sce) {
         }
     };
     
+    $scope.remove = function(track) {
+        console.log("Entered $scope.remove in app.js");
+        for (let i = 0; i < $scope.queue.length; i++) {
+            if ($scope.queue[i].id == track.id) {
+                console.log("Found matching IDs: " + $scope.queue[i].id + ", " + track.id);
+                $scope.queue.splice(i,1);
+                console.log("new $scope.queue entries: ");
+                break;
+            }
+        }
+        for (let i=0; i < $scope.queue.length; i++){
+            console.log($scope.queue[i].title + ", " + $scope.queue[i].genre + ", " + $scope.queue[i].url + ", " + $scope.queue[i].id);
+        }
+        
+           
+    };
+    
     // Plays selected track without removing from the queue
     $scope.play = function(track){
         console.log("Entered $scope.play on app.js, params: " + track.title + ", " + track.genre + ", " + track.url + ", " + track.id);
@@ -113,7 +130,7 @@ app.controller('controller', function($scope, $sce) {
         // load new url to player
         $scope.updatePlayer('nowPlaying', track);
         var player = document.getElementById('nowPlaying');
-        // player.load();
+        player.play();
         console.log("audio path: " + document.getElementById('nowPlaying').src);
 
 
@@ -125,4 +142,6 @@ app.controller('controller', function($scope, $sce) {
         player.src = track.url;
         player.load();
     }
+    
+  
 });

@@ -1,5 +1,6 @@
 import os
 import sys
+from pymongo import MongoClient
 from flask_socketio import SocketIO, emit
 from flask import Flask, render_template, request
 app = Flask(__name__)
@@ -9,6 +10,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 socketio = SocketIO(app)
+client = MongoClient('localhost', 27017)
 
 @socketio.on('connect')
 def makeConnection():
