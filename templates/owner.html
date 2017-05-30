@@ -25,7 +25,7 @@
                         <audio id="nowPlaying" ng-src="{{ '{{trustedUrl(nowPlayingSrc)'}} }}"></audio>
                             <tr>
                                 <td>
-                                    <a id="nowPlayingSelector" class="btn btn-default btn-lg fa fa-pause" onclick="playPause()"></a>
+                                    <a id="nowPlayingSelector" ng-class="isPlaying()" onclick="playPause()"></a>
                                 </td>
                                 <td>
                                 </td>
@@ -44,12 +44,12 @@
                 <div class="col-md-3">
                     <h4>Queue</h4>
                     <hr class="large"/>
-                    <table class="table text-left">
+                    <table class="table table-hover text-left">
                             <tr ng-repeat="entry in queue.slice().reverse() track by $index">
                                 <td><strong>{{ '{{ entry.title }}' }}</strong></td>
                                 <td>{{ '{{ entry.genre }}' }}</td>
                                 <td>
-                                    <i class="btn-queue btn-default btn-xs fa fa-play" ng-click="play(entry)"/>
+                                    <i class="btn-queue btn-default btn-xs fa fa-play" ng-click="play(entry); remove(entry)"/>
                                 </td>
                                 <td>
                                     <i class="btn-queue btn-default btn-xs fa fa-remove" ng-click="remove(entry)"/>

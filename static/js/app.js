@@ -4,6 +4,7 @@ app.controller('controller', function($scope, $sce) {
     var socket = io.connect('https://' + document.domain + ':' + location.port);
     
     $scope.loggedIn = false;
+    $scope.playing = false;
     $scope.selectedTrack = {
         title: "None",
         genre: "None",
@@ -141,6 +142,17 @@ app.controller('controller', function($scope, $sce) {
         var player = document.getElementById(id);
         player.src = track.url;
         player.load();
+    };
+    
+    
+    // button icons
+    $scope.isPlaying = function() {
+        var element = document.getElementById('nowPlaying');
+        if (element.paused) {
+            return "btn btn-default fa fa-play";
+        } else {
+            return "btn btn-default fa fa-pause";
+        }
     }
     
   
