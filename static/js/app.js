@@ -3,14 +3,30 @@ var app = angular.module('app', []);
 app.controller('controller', function($scope, $sce) {
     var socket = io.connect('https://' + document.domain + ':' + location.port);
     
+    // required for audio player
+    $scope.trustedUrl = function(url) {
+        return $sce.trustAsResourceUrl(url);
+    };
+    
     $scope.loggedIn = false;
     $scope.playing = false;
+    $scope.player = document.getElementById('nowPlaying');
+    
+    // listen for end of song, move to next in queue
+    $scope.player.addEventListener('ended', function(){
+        var last = $scope.queue.pop();
+        console.log("Song ended.  Now playing... " + last.title);
+        $scope.play(last);
+        $scope.remove(last);
+    });
+    
     $scope.selectedTrack = {
         title: "None",
         genre: "None",
         url: "None",
         id: 0,
     };
+    
     $scope.nowPlaying = {
         title: "None",
         genre: "None",
@@ -19,10 +35,6 @@ app.controller('controller', function($scope, $sce) {
     };
     
     $scope.nowPlayingSrc = $scope.nowPlaying.url;
-    
-    $scope.trustedUrl = function(url) {
-        return $sce.trustAsResourceUrl(url);
-    };
     
     $scope.queue = [];
     $scope.uniqueQueueID = 1;
@@ -64,6 +76,8 @@ app.controller('controller', function($scope, $sce) {
         $scope.selectedTrack.title = id;
     };
     
+    // pushes selected track to queue
+    // TODO: Actually query a database instead of an incredibly tedious switch statement
     $scope.push = function() {
         console.log("Entered $scope.addToQueue on scope.js");
         switch($scope.selectedTrack.title){
@@ -87,6 +101,16 @@ app.controller('controller', function($scope, $sce) {
                 $scope.uniqueQueueID++;
                 break;
                 
+            case 'B3':
+                $scope.queue.push({
+                    title: $scope.selectedTrack.title,
+                    genre: "genre",
+                    id: $scope.uniqueQueueID,
+                    url: "static/media/10sec.m4a",
+                });
+                $scope.uniqueQueueID++;
+                break;
+                
             default:
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
@@ -106,6 +130,7 @@ app.controller('controller', function($scope, $sce) {
         }
     };
     
+    // remove specific track from queue
     $scope.remove = function(track) {
         console.log("Entered $scope.remove in app.js");
         for (let i = 0; i < $scope.queue.length; i++) {
@@ -130,11 +155,8 @@ app.controller('controller', function($scope, $sce) {
         
         // load new url to player
         $scope.updatePlayer('nowPlaying', track);
-        var player = document.getElementById('nowPlaying');
-        player.play();
+        $scope.player.play();
         console.log("audio path: " + document.getElementById('nowPlaying').src);
-
-
     };
     
     // updates and reloads player with new track
@@ -145,15 +167,12 @@ app.controller('controller', function($scope, $sce) {
     };
     
     
-    // button icons
+    // update button icons
     $scope.isPlaying = function() {
-        var element = document.getElementById('nowPlaying');
-        if (element.paused) {
-            return "btn btn-default fa fa-play";
+        if ($scope.player.paused) {
+            return "btn btn-default btn-lg fa fa-play";
         } else {
-            return "btn btn-default fa fa-pause";
+            return "btn btn-default btn-lg fa fa-pause";
         }
-    }
-    
-  
+    };
 });

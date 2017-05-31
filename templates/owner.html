@@ -45,7 +45,7 @@
                     <h4>Queue</h4>
                     <hr class="large"/>
                     <table class="table table-hover text-left">
-                            <tr ng-repeat="entry in queue.slice().reverse() track by $index">
+                            <tr ng-repeat="entry in queue.slice() track by $index">
                                 <td><strong>{{ '{{ entry.title }}' }}</strong></td>
                                 <td>{{ '{{ entry.genre }}' }}</td>
                                 <td>
@@ -88,9 +88,7 @@
                     <p>TODO: Show loops of selected track.  Allow addition of loop or entire track to queue.</p>
                     <h5 ng-show="selectedTrack.title == 'None'">Select a track!</h5>
                     <h5 ng-show="selectedTrack.title != 'None'">Track: {{ '{{selectedTrack.title}}' }}</h5>
-                    <audio id="preview" src="static/media/RickRoll.webm"></audio>
-                    <button class="btn btn-default btn-lg img-reponsive" onclick="document.getElementById('preview').paused ? document.getElementById('preview').play() : document.getElementById('preview').pause();"></button>
-                    <br/> <br/>
+                    
                     <button type="button" class="btn btn-default" ng-show="selectedTrack.title != 'None'" ng-click="push(selectedTrack)">Add to queue</button>
 
                 </div>
