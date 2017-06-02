@@ -16,8 +16,10 @@ app.controller('controller', function($scope, $sce) {
     $scope.player.addEventListener('ended', function(){
         var last = $scope.queue.pop();
         console.log("Song ended.  Now playing... " + last.title);
+        $scope.nowPlaying = last;
         $scope.play(last);
         $scope.remove(last);
+        $scope.$apply();
     });
     
     $scope.selectedTrack = {
