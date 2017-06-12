@@ -1,6 +1,7 @@
 import os
 import sys
 from pymongo import MongoClient
+import pprint
 from flask_socketio import SocketIO, emit
 from flask import Flask, render_template, request
 app = Flask(__name__)
@@ -11,10 +12,17 @@ sys.setdefaultencoding('utf8')
 
 socketio = SocketIO(app)
 client = MongoClient('localhost', 27017)
+db = client['apollo']
+collection = db['tracks']
+
 
 @socketio.on('connect')
 def makeConnection():
     print('Connected.')
+    
+    print("Printing database entries...")
+    for entry in collection.find():
+        pprint.pprint(entry)
     
 @app.route('/', methods=['GET', 'POST'])
 def renderIndex():
