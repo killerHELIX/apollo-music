@@ -46,7 +46,7 @@
 </head>
 
 
-<body ng-controller="controller">
+<body ng-controller="layout">
 
     <!-- Navigation -->
     <a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
@@ -57,7 +57,7 @@
                 <a href="/">Apollo</a>
             </li>
             <li>
-                <a href="" data-toggle="modal" data-target="#loginModal" onclick=$("#menu-close").click(); ng-hide="loggedIn">Login</a>
+                <a href="" data-toggle="modal" data-target="#loginModal" onclick=$("#menu-close").click(); ng-show="!loggedIn">Login</a>
                 <a href="" style="font-size: 18px" data-toggle="modal" data-target="#loginModal" onclick=$("#menu-close").click(); ng-show="loggedIn">{{ '{{currentUser}}' }}</a>
             </li>
             <li>
