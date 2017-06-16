@@ -93,6 +93,7 @@ app.controller('owner', function($scope, $sce, shared) {
     // TODO: Actually query a database instead of an incredibly tedious switch statement
     $scope.push = function() {
         console.log("Entered $scope.addToQueue on owner CTRL (app.js)");
+        socket.emit('findTrack', $scope.selectedTrack);
         switch($scope.selectedTrack.title){
             case 'A3':
                 $scope.queue.push({
@@ -119,7 +120,7 @@ app.controller('owner', function($scope, $sce, shared) {
                     title: $scope.selectedTrack.title,
                     genre: "genre",
                     id: $scope.uniqueQueueID,
-                    url: "static/media/10sec.m4a",
+                    url: "static/media/RickRoll.webm",
                 });
                 $scope.uniqueQueueID++;
                 break;
@@ -129,7 +130,7 @@ app.controller('owner', function($scope, $sce, shared) {
                     title: $scope.selectedTrack.title,
                     genre: "genre",
                     id: $scope.uniqueQueueID,
-                    url: "static/media/RickRoll.webm",
+                    url: "static/media/10sec.m4a",
             });
             $scope.uniqueQueueID++;
             break;   
@@ -216,6 +217,7 @@ app.controller('layout', function($scope, $sce, shared) {
     // changes loggedIn to true
     $scope.login = function(username, password) {
         console.log("Entered $scope.login in layout CTRL (app.js)");
+        socket.emit('validateLogin', username, password);
         $scope.setCurrentUser(username);
         $scope.setLoggedIn(true);
         console.log("Received " + username + " and " + password);

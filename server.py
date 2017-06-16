@@ -23,6 +23,14 @@ def makeConnection():
     print("Printing database entries...")
     for entry in collection.find():
         pprint.pprint(entry)
+        
+@socketio.on('findTrack')
+def findTrack(track):
+	print("Entered findTrack in server.py with param " + track)
+	
+@socketio.on('validateLogin')
+def validateLogin(username, password):
+	print("Entered validateLogin on server.py with params " + username + ", " + password)
     
 @app.route('/', methods=['GET', 'POST'])
 def renderIndex():
