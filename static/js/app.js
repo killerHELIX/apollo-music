@@ -237,4 +237,11 @@ app.controller('layout', function($scope, $sce, shared) {
 
     };
    
+    // passes new user info to server for database insertion
+    $scope.register = function(username, password) {
+        console.log("Entered $scope.register in layout CTRL (app.js)");
+        socket.emit('registerNew', username, password);
+        
+    };
+
 });
