@@ -57,17 +57,26 @@
                 <a href="/">Apollo</a>
             </li>
             <li>
-                <a href="" data-toggle="modal" data-target="#loginModal" onclick=$("#menu-close").click(); ng-show="!loggedIn">Login</a>
                 <a href="" style="font-size: 18px" data-toggle="modal" data-target="#loginModal" onclick=$("#menu-close").click(); ng-show="loggedIn">{{ '{{currentUser}}' }}</a>
+                {% if session['user'] == None %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+                {% else %}
+                <a href="/login" onclick=$("#menu-close").click(); ng-show="!loggedIn">{{session['user']}}</a>
+                <form action='/logout'>
+                    <button class="btn btn-default" type="submit" name='logout'>Logout</button>
+                </form>
+                {% endif %}
             </li>
             <li>
-                <a href="/listener.html" onclick=$("#menu-close").click();>Find a room</a>
+                <a href="/listener" onclick=$("#menu-close").click();>Find a room</a>
             </li>
             <li>
-                <a href="/owner.html" onclick=$("#menu-close").click();>Create a room</a>
+                <a href="/owner" onclick=$("#menu-close").click();>Create a room</a>
             </li>
             <li>
-                <a href="" ng-show="loggedIn" ng-click="logout()">Logout</a>
+                
+                <!--<a href="" ng-show="loggedIn" ng-click="logout()">Logout</a>-->
             </li>
         </ul>
     </nav>

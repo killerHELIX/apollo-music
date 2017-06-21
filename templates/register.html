@@ -1,0 +1,30 @@
+{% extends "layout.html" %} {% block content %}
+
+    <!-- Header -->
+    <header id="top" class="header">
+        <div class="text-vertical-center">
+            <h1>Apollo</h1>
+            <h4>A synchronized music player.</h4>
+            
+            <div class='col-lg-offset-4 col-lg-4'>
+                <div>
+                    <h4>Register</h4>
+                </div>
+                <form class='form-group' method="post" action="/register">
+                    <p>Login to access your previously created rooms as the owner.</p>
+                    <label for="username">Username:</label>
+                    <input type="text" class="form-control" id="username" name="username" ng-model="username">
+                    </br>
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" name="password" ng-model="password">
+                    <br/>
+                    <input class="btn btn-default" type="submit" value="Register" name="submit"/>
+                    
+        
+                </form>
+            </div>
+        </div>
+    </header>
+
+
+{% endblock %}
