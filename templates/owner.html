@@ -4,9 +4,12 @@
     <header id="top" class="header">
         <div class="text-vertical-center">
             <h1>Make the world a better place.</h1>
-            <h3><a href="" data-toggle="modal" data-target="#loginModal">Login or create an account to make a room!</a></h3>
+            {% if session['user'] == None %}
+            
+            <h3><a href="/login">Login</a> or <a href="/register">create an account</a> to make a room!</h3>
             <br>
             
+            {% else %}
         </div>
     </header>
 
@@ -97,5 +100,6 @@
         </div>
         <!-- /.container -->
     </section>
-
+    
+{% endif %}
 {% endblock %}

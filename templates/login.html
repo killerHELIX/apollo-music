@@ -8,7 +8,10 @@
             
             <div class='col-lg-offset-4 col-lg-4'>
                 <div>
-                    <h4>Login</h4>
+                    <h3>Login</h3>
+                    {% if fromRegister %}
+                    <h3>Login with your newly created account to begin!</h3>
+                    {% endif %}
                 </div>
                 <form class='form-group' method="post" action="/login">
                     <p>Login to access your previously created rooms as the owner.</p>
@@ -20,9 +23,10 @@
                     <br/>
                     {% if not success %}
                     <h3>Validation failed.  Are you sure you typed everything in correctly?</h3>
+                    <br>
                     {% endif %}
                     <input class="btn btn-default" type="submit" value="Submit" name="submit"/>
-                    <button class="btn btn-default" type="button" class="btn btn-default" ng-click="register(username, password)">DEBUG Register</button>
+                    <!--<button class="btn btn-default" type="button" class="btn btn-default" ng-click="register(username, password)">DEBUG Register</button>-->
         
                 </form>
             </div>

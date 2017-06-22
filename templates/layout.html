@@ -57,14 +57,14 @@
                 <a href="/">Apollo</a>
             </li>
             <li>
-                <a href="" style="font-size: 18px" data-toggle="modal" data-target="#loginModal" onclick=$("#menu-close").click(); ng-show="loggedIn">{{ '{{currentUser}}' }}</a>
+                <a href="">{{ '{{currentUser}}' }}</a>
                 {% if session['user'] == None %}
                 <a href="/login">Login</a>
                 <a href="/register">Register</a>
                 {% else %}
                 <a href="/login" onclick=$("#menu-close").click(); ng-show="!loggedIn">{{session['user']}}</a>
                 <form action='/logout'>
-                    <button class="btn btn-default" type="submit" name='logout'>Logout</button>
+                    <a href="" name='logout' onclick='this.parentNode.submit()'>Logout</button>
                 </form>
                 {% endif %}
             </li>

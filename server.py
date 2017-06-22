@@ -6,7 +6,7 @@ from flask_socketio import SocketIO, emit
 from flask import Flask, render_template, request, session, redirect
 from flask_bcrypt import Bcrypt
 app = Flask(__name__)
-app.secret_key = os.urandom(24).encode('hex')
+app.config['SECRET_KEY'] = os.urandom(24).encode('hex')
 bcrypt = Bcrypt(app)
 
 # prevents UnicodeDecodeError
@@ -17,15 +17,15 @@ sys.setdefaultencoding('utf8')
 socketio = SocketIO(app)
 client = MongoClient('localhost', 27017)
 db = client['apollo']
-allTracks = db['tracks']
-allUsers = db['users']
+tracks = db['tracks']
+users = db['users']
 
 @socketio.on('connect')
 def makeConnection():
     print('Connected.')
     
     # print("Printing all tracks...")
-    # for track in allTracks.find():
+    # for track in tracks.find():
     #     pprint.pprint(track)
         
 @socketio.on('findTrack')
@@ -39,10 +39,10 @@ def validateLogin(username, password):
 		# pw = bcrypt.generate_password_hash(password)
 		# print(password + " hashed into " + pw)
 		print("Printing all users...")
-		for user in allUsers.find():
+		for user in users.find():
 			pprint.pprint(user)
 		print("Searching for " + username + "...")
-		result = allUsers.find_one({"username":username})
+		result = users.find_one({"username":username})
 		if result is None:
 			print(username + " does not exist!")
 			# emit something
@@ -65,7 +65,7 @@ def registerNew(username, password):
 	
 	# generate JSON object to insert
 	userInfo = {'username': username, 'password': bcrypt.generate_password_hash(password)}
-	success = allUsers.insert_one(userInfo)
+	success = users.insert_one(userInfo)
 	if success.acknowledged:
 		print("Insertion successful!")
 		# emit something
@@ -105,10 +105,10 @@ def login():
 		
 		try:
 			print("Printing all users...")
-			for user in allUsers.find():
+			for user in users.find():
 				pprint.pprint(user)
 			print("Searching for " + username + "...")
-			result = allUsers.find_one({"username":username})
+			result = users.find_one({"username":username})
 			if result is None:
 				print(username + " does not exist!")
 				return render_template('login.html', success=False, redirected=False)
@@ -124,9 +124,10 @@ def login():
 				return render_template('login.html', success=False, redirected=False)
 			
 		except Exception as e:
-			print("Some shit went wrong. Form inputs may be empty.")
+			print("Some shit went wrong. See error below.")
 			print(e)
 			# emit something
+			
 		
 	return render_template('login.html', success=True)
 	
@@ -148,20 +149,22 @@ def register():
 		username = request.form['username']
 		password = request.form['password']
 		
-		info = {'username':username, 'password':password}
-		existence = allUsers.find({'username':username})
-		if existence is None:
+		info = {'username':username, 'password':bcrypt.generate_password_hash(password).decode('utf-8')}
+		existence = users.find({'username':username})
+		print("existence: ")
+		print(existence.count())
+		if existence.count() is 0:
 			print("Username not taken.  Insert that bitch.")
-			success = allUsers.insertOne(info)
+			success = users.insert_one(info)
 			if success.acknowledged:
 				print("Inserted successfully.")
-				return render_template("login.html", redirected=True)
+				return render_template("login.html", fromRegister=True, success=True)
 			else:
 				print("Insertion failed.")
-				return render_template("register.html", success="InsertionFailed")
+				return render_template("register.html", status="InsertionFailed")
 		else:
 			print("Username already taken.  Don't insert shit.")
-			return render_template("register.html", success="UsernameTaken")
+			return render_template("register.html", status="UsernameTaken")
 	
 	return render_template("register.html")
 	
