@@ -26,13 +26,18 @@ def makeConnection():
     print('Connected.')
     
     print("Printing all tracks...")
-    for track in tracks.find():
-        pprint.pprint(track)
+    # for track in tracks.find():
+    #     pprint.pprint(track)
+    print("Just kidding.  There's a lot.")
   
 	
 @socketio.on('findTrack')
 def findTrack(track):
-	print("Entered findTrack in server.py with param " + track)
+	print("Entered findTrack in server.py with param track['title']" + track['title'])
+	print("Searching for tracks with title " + track['title'])
+	for track in tracks.find({'title':track['title']}):
+		print(str(track['_id']) + ', ' + track['title'])
+		emit('foundTrack', track)
 	
 @socketio.on('debugPopulateDB')
 def debug():
@@ -50,7 +55,7 @@ def debug():
 			# add the track to payload
 			tmpTrack = {
 				'_id': count,
-				'title': index + str(i),
+				'title': index + str(i) + ' Full',
 				'genre': 'who knows',
 				'url': 'static/media/' + random.choice(urls),
 				'subtracks': []
@@ -72,7 +77,7 @@ def debug():
 				tmpTrack['subtracks'].append(tmpSub)
 				count = count + 1
 			
-			
+			# fire payload
 			inserted_tracks.append(tmpTrack)
 	
 	print("Would have inserted these tracks: ")

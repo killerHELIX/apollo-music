@@ -27,18 +27,18 @@
                     <table class="table text-left" ng-show="nowPlaying.title != 'None'">
                         <audio id="nowPlaying" ng-src="{{ '{{trustedUrl(nowPlayingSrc)'}} }}"></audio>
                             <tr>
+                                <td ng-bind="nowPlaying.title"></td>
+                            </tr>
+                            <tr>
+                                <td ng-bind="nowPlaying.genre"></td>
+                            </tr>
+                            <tr>
                                 <td>
                                     <a id="nowPlayingSelector" ng-class="isPlaying()" onclick="playPause()"></a>
                                 </td>
                                 <td>
-                                </td>
-                                <td>
                                     <input id="volume" onchange="changeVolume()" type="range" min="0" max="1" step="0.02" value="1" ng-model="volume">
                                 </td>
-                            </tr>
-                            <tr>
-                                <td ng-bind="nowPlaying.title"></td>
-                                <td ng-bind="nowPlaying.genre"></td>
                             </tr>
                     </table>
                 </div>
@@ -67,19 +67,19 @@
                     <hr class="large"/>
                     <div class="row text-center">
                         <div class="col-2 btn-group">
-                            <button id="A3" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">A3</button>
-                            <button id="B3" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">B3</button>
-                            <button id="C3" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">C3</button>
+                            <button id="A3 Full" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">A3</button>
+                            <button id="B3 Full" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">B3</button>
+                            <button id="C3 Full" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">C3</button>
                         </div></br>
                         <div class="col-2 btn-group">
-                            <button id="A2" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">A2</button>
-                            <button id="B2" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">B2</button>
-                            <button id="C2" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">C2</button>
+                            <button id="A2 Full" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">A2</button>
+                            <button id="B2 Full" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">B2</button>
+                            <button id="C2 Full" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">C2</button>
                         </div></br>
                         <div class="col-2 btn-group">
-                            <button id="A1" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">A1</button>
-                            <button id="B1" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">B1</button>
-                            <button id="C1" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">C1</button>
+                            <button id="A1 Full" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">A1</button>
+                            <button id="B1 Full" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">B1</button>
+                            <button id="C1 Full" type="button" class="btn btn-default btn-lg" ng-click="selectTrack(this.id)">C1</button>
                         </div></br>
                     </div>
                 </div>
@@ -90,11 +90,24 @@
                     <hr class="large"/>
                     <p>TODO: Show loops of selected track.  Allow addition of loop or entire track to queue.</p>
                     <h5 ng-show="selectedTrack.title == 'None'">Select a track!</h5>
-                    <h5 ng-show="selectedTrack.title != 'None'">Track: {{ '{{selectedTrack.title}}' }}</h5>
                     <table class="table table-hover text-left">
-                            <tr ng-repeat="subtrack in selectedTrack.subtrack_ids">
-                                <td><strong>{{ '{{ selectedTrack.title }}' }}</strong></td>
-                                <td>{{ '{{ selectedTrack.genre }}' }}</td>
+                            <tr ng-show="selectedTrack.title != 'None'">
+                                <td>
+                                    <strong>{{ '{{selectedTrack.title}}' }}</strong>
+                                </td>
+                                <td>
+                                    <strong>{{ '{{selectedTrack.genre}}' }}</strong>
+                                </td>
+                                <td>
+                                    <i class="btn-queue btn-default btn-xs fa fa-rotate-90 fa-level-down" ng-click="push(selectedTrack)"/>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="subtrack in selectedTrack.subtracks">
+                                <td><strong>{{ '{{ subtrack.title }}' }}</strong></td>
+                                <td>{{ '{{ subtrack.genre }}' }}</td>
+                                <td>
+                                    <i class="btn-queue btn-default btn-xs fa fa-rotate-90 fa-level-down" ng-click="push(subtrack)"/>
+                                </td>
                                 </td>
                             </tr>
                     </table>

@@ -37,12 +37,18 @@ app.controller('owner', function($scope, $sce, shared) {
     // listen for end of song, move to next in queue
     if ($scope.player != null) {
         $scope.player.addEventListener('ended', function(){
-            var last = $scope.queue.pop();
-            console.log("Song ended.  Now playing... " + last.title);
-            $scope.nowPlaying = last;
-            $scope.play(last);
-            $scope.remove(last);
-            $scope.$apply();
+            if ($scope.queue.length != 0) {
+                var last = $scope.queue.pop();
+                console.log("Song ended.  Now playing... " + last.title);
+                $scope.nowPlaying = last;
+                $scope.play(last);
+                $scope.remove(last);
+                $scope.$apply();
+            // if at end of queue, continue playing the same track
+            } else {
+                console.log('At end of queue.  Replaying...');
+                $scope.player.play();
+            }
         });
     } else {
         console.log("This page doesn't have an audio player!");
@@ -52,14 +58,14 @@ app.controller('owner', function($scope, $sce, shared) {
         title: "None",
         genre: "None",
         url: "None",
-        id: 0,
+        queueID: 0,
     };
     
     $scope.nowPlaying = {
         title: "None",
         genre: "None",
         url: "static/media/RickRoll.webm",
-        id: 0,
+        queueID: 0,
     };
     
     $scope.nowPlayingSrc = $scope.nowPlaying.url;
@@ -87,27 +93,44 @@ app.controller('owner', function($scope, $sce, shared) {
         
         // set selected track
         $scope.selectedTrack.title = id;
+        
+        socket.emit('findTrack', $scope.selectedTrack);
     };
     
     
     $scope.debugPopulateDB = function() {
         console.log("Entered debugPopulateDB on owner CTRL (app.js)");
-        socket.emit('debugPopulateDB')    
+        socket.emit('debugPopulateDB');
     };
+    
+    socket.on('foundTrack', function(track) {
+        console.log("Entered foundTrack on owner CTRL (app.js)");
+        track['queueID'] = $scope.uniqueQueueID;
+        // update selectedTrack with new info
+        $scope.selectedTrack = track;
+        console.log('track then selectedTrack');
+        console.log(track);
+        console.log($scope.selectedTrack.subtracks);
+        $scope.$apply();
+    });
     
     // pushes selected track to queue
     // TODO: Actually query a database instead of an incredibly tedious switch statement
-    $scope.push = function() {
+    $scope.push = function(track) {
         console.log("Entered $scope.addToQueue on owner CTRL (app.js)");
-        socket.emit('findTrack', $scope.selectedTrack);
+        
+        $scope.queue.push(track);
+        $scope.uniqueQueueID++;
+        
+        /*
         switch($scope.selectedTrack.title){
             case 'A3':
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
-                    id: $scope.uniqueQueueID,
+                    queueID: $scope.uniqueQueueID,
                     subtrack_ids: ['A3a', 'A3b', 'A3c', 'A3d'],
-                    url: "static/media/LetGoArkPatrol.webm",
+                    url: "static/media/10sec.m4a",
                 });
                 $scope.uniqueQueueID++;
                 break;
@@ -116,7 +139,7 @@ app.controller('owner', function($scope, $sce, shared) {
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
-                    id: $scope.uniqueQueueID,
+                    queueID: $scope.uniqueQueueID,
                     url: "static/media/Prismo.webm",
                 });
                 $scope.uniqueQueueID++;
@@ -126,7 +149,7 @@ app.controller('owner', function($scope, $sce, shared) {
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
-                    id: $scope.uniqueQueueID,
+                    queueID: $scope.uniqueQueueID,
                     url: "static/media/RickRoll.webm",
                 });
                 $scope.uniqueQueueID++;
@@ -136,7 +159,7 @@ app.controller('owner', function($scope, $sce, shared) {
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
-                    id: $scope.uniqueQueueID,
+                    queueID: $scope.uniqueQueueID,
                     url: "static/media/LetGoArkPatrol.webm",
                 });
                 $scope.uniqueQueueID++;
@@ -146,7 +169,7 @@ app.controller('owner', function($scope, $sce, shared) {
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
-                    id: $scope.uniqueQueueID,
+                    queueID: $scope.uniqueQueueID,
                     url: "static/media/Prismo.webm",
                 });
                 $scope.uniqueQueueID++;
@@ -156,7 +179,7 @@ app.controller('owner', function($scope, $sce, shared) {
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
-                    id: $scope.uniqueQueueID,
+                    queueID: $scope.uniqueQueueID,
                     url: "static/media/RickRoll.webm",
                 });
                 $scope.uniqueQueueID++;
@@ -166,7 +189,7 @@ app.controller('owner', function($scope, $sce, shared) {
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
-                    id: $scope.uniqueQueueID,
+                    queueID: $scope.uniqueQueueID,
                     url: "static/media/LetGoArkPatrol.webm",
                 });
                 $scope.uniqueQueueID++;
@@ -176,7 +199,7 @@ app.controller('owner', function($scope, $sce, shared) {
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
-                    id: $scope.uniqueQueueID,
+                    queueID: $scope.uniqueQueueID,
                     url: "static/media/Prismo.webm",
                 });
                 $scope.uniqueQueueID++;
@@ -186,7 +209,7 @@ app.controller('owner', function($scope, $sce, shared) {
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
-                    id: $scope.uniqueQueueID,
+                    queueID: $scope.uniqueQueueID,
                     url: "static/media/RickRoll.webm",
                 });
                 $scope.uniqueQueueID++;
@@ -196,13 +219,14 @@ app.controller('owner', function($scope, $sce, shared) {
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
-                    id: $scope.uniqueQueueID,
+                    queueID: $scope.uniqueQueueID,
                     url: "static/media/10sec.m4a",
             });
             $scope.uniqueQueueID++;
             break;   
                 
         }
+        */
         
         
         console.log("$scope.queue entries: ");
@@ -215,8 +239,8 @@ app.controller('owner', function($scope, $sce, shared) {
     $scope.remove = function(track) {
         console.log("Entered $scope.remove in owner CTRL (app.js)");
         for (let i = 0; i < $scope.queue.length; i++) {
-            if ($scope.queue[i].id == track.id) {
-                console.log("Found matching IDs: " + $scope.queue[i].id + ", " + track.id);
+            if ($scope.queue[i].queueID == track.queueID) {
+                console.log("Found matching IDs: " + $scope.queue[i].queueID + ", " + track.queueID);
                 $scope.queue.splice(i,1);
                 console.log("new $scope.queue entries: ");
                 break;
