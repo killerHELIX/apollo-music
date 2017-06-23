@@ -1,5 +1,6 @@
 import os
 import sys
+import random
 from pymongo import MongoClient
 import pprint
 from flask_socketio import SocketIO, emit
@@ -24,55 +25,75 @@ users = db['users']
 def makeConnection():
     print('Connected.')
     
-    # print("Printing all tracks...")
-    # for track in tracks.find():
-    #     pprint.pprint(track)
-        
+    print("Printing all tracks...")
+    for track in tracks.find():
+        pprint.pprint(track)
+  
+	
 @socketio.on('findTrack')
 def findTrack(track):
 	print("Entered findTrack in server.py with param " + track)
 	
-@socketio.on('validateLogin')
-def validateLogin(username, password):
-	try:
-		print("Entered validateLogin on server.py with params " + username + ", " + password)
-		# pw = bcrypt.generate_password_hash(password)
-		# print(password + " hashed into " + pw)
-		print("Printing all users...")
-		for user in users.find():
-			pprint.pprint(user)
-		print("Searching for " + username + "...")
-		result = users.find_one({"username":username})
-		if result is None:
-			print(username + " does not exist!")
-			# emit something
-		elif bcrypt.check_password_hash(result['password'], password):
-			print("Through the power of cryptography, you're clear to login. (validation successful)")
-			# emit something
-		else:
-			print("document: " + result['username'] + ", " + result['password'])
-			print("Filthy scum, this account is not yours for plunder. (validation failed)")
-			# emit something
-			
-	except Exception as e:
-		print("Some shit went wrong. Form inputs may be empty.")
-		print(e)
-		# emit something
-		
-@socketio.on('registerNew')
-def registerNew(username, password):
-	print("Entered registerNew on server.py with params " + username + ", " + password)
+@socketio.on('debugPopulateDB')
+def debug():
+	print("Entered debugPopulateDB in server.py")
+	inserted_tracks = []
+	custom_index = ['A', 'B', 'C']
+	subtracks = ['a', 'b', 'c', 'd', 'e', 'f']
+	urls = ['10sec.m4a', 'LetGoArkPatrol.webm', 'Prismo.webm', 'RickRoll.webm']
+	count = 1;
 	
-	# generate JSON object to insert
-	userInfo = {'username': username, 'password': bcrypt.generate_password_hash(password)}
-	success = users.insert_one(userInfo)
-	if success.acknowledged:
-		print("Insertion successful!")
-		# emit something
-	else:
-		print("Insertion failed.")
-		# emit something
-    
+	# iterate horizontally (left->right)
+	for index in custom_index:
+		# iterate vertically (low->high)
+		for i in range(1,4):
+			# add the track to payload
+			tmpTrack = {
+				'_id': count,
+				'title': index + str(i),
+				'genre': 'who knows',
+				'url': 'static/media/' + random.choice(urls),
+				'subtracks': []
+			}
+			count = count + 1
+			
+			# slap on a subtrack for each track
+			for sub in subtracks:
+				print(index + str(i) + sub)
+				tmpSub = {
+					"_id": count,
+					'title': index + str(i) + sub,
+					'genre': 'who knows',
+					'url': 'static/media/' + random.choice(urls),
+					'subtracks': []
+				}
+				
+				# append to subtrack key:value pair
+				tmpTrack['subtracks'].append(tmpSub)
+				count = count + 1
+			
+			
+			inserted_tracks.append(tmpTrack)
+	
+	print("Would have inserted these tracks: ")
+	for track in inserted_tracks:
+		print(track['title'] + ', ' + str(track['_id']))
+		if track['subtracks']:
+			for sub in track['subtracks']:
+				print(sub['title'] + ', ' + str(sub['_id']))
+				
+	# drop that monster condom for your magnum dong
+	try:
+		for track in inserted_tracks:
+			tracks.insert_one(track)
+			if track['subtracks']:
+				for sub in track['subtracks']:
+					tracks.insert_one(sub)
+					
+	except Exception as e:
+		print("This monster condom wasn't the right one... (insertion of magnum dong failed),")
+		print(e)
+		
 @app.route('/', methods=['GET', 'POST'])
 def renderIndex():
 	
@@ -149,7 +170,11 @@ def register():
 		username = request.form['username']
 		password = request.form['password']
 		
-		info = {'username':username, 'password':bcrypt.generate_password_hash(password).decode('utf-8')}
+		info = {
+			'username':username, 
+			'password':bcrypt.generate_password_hash(password).decode('utf-8')
+		}
+		
 		existence = users.find({'username':username})
 		print("existence: ")
 		print(existence.count())

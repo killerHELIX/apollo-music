@@ -89,6 +89,12 @@ app.controller('owner', function($scope, $sce, shared) {
         $scope.selectedTrack.title = id;
     };
     
+    
+    $scope.debugPopulateDB = function() {
+        console.log("Entered debugPopulateDB on owner CTRL (app.js)");
+        socket.emit('debugPopulateDB')    
+    };
+    
     // pushes selected track to queue
     // TODO: Actually query a database instead of an incredibly tedious switch statement
     $scope.push = function() {
@@ -96,6 +102,67 @@ app.controller('owner', function($scope, $sce, shared) {
         socket.emit('findTrack', $scope.selectedTrack);
         switch($scope.selectedTrack.title){
             case 'A3':
+                $scope.queue.push({
+                    title: $scope.selectedTrack.title,
+                    genre: "genre",
+                    id: $scope.uniqueQueueID,
+                    subtrack_ids: ['A3a', 'A3b', 'A3c', 'A3d'],
+                    url: "static/media/LetGoArkPatrol.webm",
+                });
+                $scope.uniqueQueueID++;
+                break;
+            
+            case 'B3':
+                $scope.queue.push({
+                    title: $scope.selectedTrack.title,
+                    genre: "genre",
+                    id: $scope.uniqueQueueID,
+                    url: "static/media/Prismo.webm",
+                });
+                $scope.uniqueQueueID++;
+                break;
+                
+            case 'C3':
+                $scope.queue.push({
+                    title: $scope.selectedTrack.title,
+                    genre: "genre",
+                    id: $scope.uniqueQueueID,
+                    url: "static/media/RickRoll.webm",
+                });
+                $scope.uniqueQueueID++;
+                break;
+                
+            case 'A2':
+                $scope.queue.push({
+                    title: $scope.selectedTrack.title,
+                    genre: "genre",
+                    id: $scope.uniqueQueueID,
+                    url: "static/media/LetGoArkPatrol.webm",
+                });
+                $scope.uniqueQueueID++;
+                break;
+            
+            case 'B2':
+                $scope.queue.push({
+                    title: $scope.selectedTrack.title,
+                    genre: "genre",
+                    id: $scope.uniqueQueueID,
+                    url: "static/media/Prismo.webm",
+                });
+                $scope.uniqueQueueID++;
+                break;
+                
+            case 'C2':
+                $scope.queue.push({
+                    title: $scope.selectedTrack.title,
+                    genre: "genre",
+                    id: $scope.uniqueQueueID,
+                    url: "static/media/RickRoll.webm",
+                });
+                $scope.uniqueQueueID++;
+                break;
+                
+            case 'A1':
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",
@@ -115,7 +182,7 @@ app.controller('owner', function($scope, $sce, shared) {
                 $scope.uniqueQueueID++;
                 break;
                 
-            case 'B3':
+            case 'C1':
                 $scope.queue.push({
                     title: $scope.selectedTrack.title,
                     genre: "genre",

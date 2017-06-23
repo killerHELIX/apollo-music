@@ -91,8 +91,17 @@
                     <p>TODO: Show loops of selected track.  Allow addition of loop or entire track to queue.</p>
                     <h5 ng-show="selectedTrack.title == 'None'">Select a track!</h5>
                     <h5 ng-show="selectedTrack.title != 'None'">Track: {{ '{{selectedTrack.title}}' }}</h5>
+                    <table class="table table-hover text-left">
+                            <tr ng-repeat="subtrack in selectedTrack.subtrack_ids">
+                                <td><strong>{{ '{{ selectedTrack.title }}' }}</strong></td>
+                                <td>{{ '{{ selectedTrack.genre }}' }}</td>
+                                </td>
+                            </tr>
+                    </table>
                     
                     <button type="button" class="btn btn-default" ng-show="selectedTrack.title != 'None'" ng-click="push(selectedTrack)">Add to queue</button>
+                    <button type="button" class="btn btn-default" ng-click="debugPopulateDB()">DEBUG: Populate database</button>
+
 
                 </div>
             </div>
