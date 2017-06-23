@@ -105,7 +105,6 @@ app.controller('owner', function($scope, $sce, shared) {
     
     socket.on('foundTrack', function(track) {
         console.log("Entered foundTrack on owner CTRL (app.js)");
-        track['queueID'] = $scope.uniqueQueueID;
         // update selectedTrack with new info
         $scope.selectedTrack = track;
         console.log('track then selectedTrack');
@@ -117,121 +116,14 @@ app.controller('owner', function($scope, $sce, shared) {
     // pushes selected track to queue
     // TODO: Actually query a database instead of an incredibly tedious switch statement
     $scope.push = function(track) {
-        console.log("Entered $scope.addToQueue on owner CTRL (app.js)");
-        
+        console.log("Entered $scope.push on owner CTRL (app.js)");
+        track['queueID'] = $scope.uniqueQueueID;
         $scope.queue.push(track);
         $scope.uniqueQueueID++;
         
-        /*
-        switch($scope.selectedTrack.title){
-            case 'A3':
-                $scope.queue.push({
-                    title: $scope.selectedTrack.title,
-                    genre: "genre",
-                    queueID: $scope.uniqueQueueID,
-                    subtrack_ids: ['A3a', 'A3b', 'A3c', 'A3d'],
-                    url: "static/media/10sec.m4a",
-                });
-                $scope.uniqueQueueID++;
-                break;
-            
-            case 'B3':
-                $scope.queue.push({
-                    title: $scope.selectedTrack.title,
-                    genre: "genre",
-                    queueID: $scope.uniqueQueueID,
-                    url: "static/media/Prismo.webm",
-                });
-                $scope.uniqueQueueID++;
-                break;
-                
-            case 'C3':
-                $scope.queue.push({
-                    title: $scope.selectedTrack.title,
-                    genre: "genre",
-                    queueID: $scope.uniqueQueueID,
-                    url: "static/media/RickRoll.webm",
-                });
-                $scope.uniqueQueueID++;
-                break;
-                
-            case 'A2':
-                $scope.queue.push({
-                    title: $scope.selectedTrack.title,
-                    genre: "genre",
-                    queueID: $scope.uniqueQueueID,
-                    url: "static/media/LetGoArkPatrol.webm",
-                });
-                $scope.uniqueQueueID++;
-                break;
-            
-            case 'B2':
-                $scope.queue.push({
-                    title: $scope.selectedTrack.title,
-                    genre: "genre",
-                    queueID: $scope.uniqueQueueID,
-                    url: "static/media/Prismo.webm",
-                });
-                $scope.uniqueQueueID++;
-                break;
-                
-            case 'C2':
-                $scope.queue.push({
-                    title: $scope.selectedTrack.title,
-                    genre: "genre",
-                    queueID: $scope.uniqueQueueID,
-                    url: "static/media/RickRoll.webm",
-                });
-                $scope.uniqueQueueID++;
-                break;
-                
-            case 'A1':
-                $scope.queue.push({
-                    title: $scope.selectedTrack.title,
-                    genre: "genre",
-                    queueID: $scope.uniqueQueueID,
-                    url: "static/media/LetGoArkPatrol.webm",
-                });
-                $scope.uniqueQueueID++;
-                break;
-            
-            case 'B1':
-                $scope.queue.push({
-                    title: $scope.selectedTrack.title,
-                    genre: "genre",
-                    queueID: $scope.uniqueQueueID,
-                    url: "static/media/Prismo.webm",
-                });
-                $scope.uniqueQueueID++;
-                break;
-                
-            case 'C1':
-                $scope.queue.push({
-                    title: $scope.selectedTrack.title,
-                    genre: "genre",
-                    queueID: $scope.uniqueQueueID,
-                    url: "static/media/RickRoll.webm",
-                });
-                $scope.uniqueQueueID++;
-                break;
-                
-            default:
-                $scope.queue.push({
-                    title: $scope.selectedTrack.title,
-                    genre: "genre",
-                    queueID: $scope.uniqueQueueID,
-                    url: "static/media/10sec.m4a",
-            });
-            $scope.uniqueQueueID++;
-            break;   
-                
-        }
-        */
-        
-        
         console.log("$scope.queue entries: ");
         for (let i=0; i < $scope.queue.length; i++){
-            console.log($scope.queue[i].title + ", " + $scope.queue[i].genre + ", " + $scope.queue[i].url + ", " + $scope.queue[i].id);
+            console.log($scope.queue[i].title + ", " + $scope.queue[i].genre + ", " + $scope.queue[i].url + ", " + $scope.queue[i].queueID);
         }
     };
     
