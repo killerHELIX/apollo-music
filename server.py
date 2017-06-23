@@ -46,6 +46,7 @@ def debug():
 	custom_index = ['A', 'B', 'C']
 	subtracks = ['a', 'b', 'c', 'd', 'e', 'f']
 	urls = ['10sec.m4a', 'LetGoArkPatrol.webm', 'Prismo.webm', 'RickRoll.webm']
+	genres = ['Light combat', 'Heavy combat', 'Light town', 'Heavy town', 'Monster Condom', 'Magnum Dong']
 	count = 1;
 	
 	# iterate horizontally (left->right)
@@ -56,7 +57,7 @@ def debug():
 			tmpTrack = {
 				'_id': count,
 				'title': index + str(i) + ' Full',
-				'genre': 'who knows',
+				'genre': random.choice(genres),
 				'url': 'static/media/' + random.choice(urls),
 				'subtracks': []
 			}
@@ -68,7 +69,7 @@ def debug():
 				tmpSub = {
 					"_id": count,
 					'title': index + str(i) + sub,
-					'genre': 'who knows',
+					'genre': random.choice(genres),
 					'url': 'static/media/' + random.choice(urls),
 					'subtracks': []
 				}
