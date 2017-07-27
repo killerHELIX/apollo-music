@@ -21,9 +21,15 @@ db = client['apollo']
 tracks = db['tracks']
 users = db['users']
 
+
 @socketio.on('connect')
 def makeConnection():
     print('Connected.')
+    
+    # initialize session variables
+    if 'user' not in session:
+    	session['user'] = None
+	session['currentRoom'] = 'defaultRoom'
     
     print("Printing all tracks...")
     # for track in tracks.find():
@@ -102,10 +108,6 @@ def debug():
 		
 @app.route('/', methods=['GET', 'POST'])
 def renderIndex():
-	
-	# initialize session variables
-	if 'user' not in session:
-		session['user'] = None
 		
 	print(request.method)
 	return render_template('index.html')

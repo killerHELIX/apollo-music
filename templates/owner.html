@@ -18,6 +18,10 @@
         <div class="container">
             <div class="row text-center">
                 <h2>Current Playlist</h2>
+
+                <p class="lead" style="display: inline-block">Room: {{ session['currentRoom'] }}</p>
+                <button type="button" class="btn btn-default btn-md">Update Room</button>
+
             <p class="lead">Playback here is synchronized across all listeners.</p>
             
                 <!-- Now Playing -->
