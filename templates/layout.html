@@ -58,14 +58,14 @@
             </li>
             <li>
                 <a href="">{{ '{{currentUser}}' }}</a>
-                {% if session['user'] == None %}
-                <a href="/login">Login</a>
-                <a href="/register">Register</a>
-                {% else %}
+                {% if session['user'] %}
                 <a href="/login" onclick=$("#menu-close").click(); ng-show="!loggedIn">{{session['user']}}</a>
                 <form action='/logout'>
                     <a href="" name='logout' onclick='this.parentNode.submit()'>Logout</button>
                 </form>
+                {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
                 {% endif %}
             </li>
             <li>

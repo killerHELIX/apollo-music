@@ -3,7 +3,7 @@ import sys
 import random
 from pymongo import MongoClient
 import pprint
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask import Flask, render_template, request, session, redirect
 from flask_bcrypt import Bcrypt
 app = Flask(__name__)
@@ -21,21 +21,15 @@ db = client['apollo']
 tracks = db['tracks']
 users = db['users']
 
+currentRoom = 'default'
 
 @socketio.on('connect')
 def makeConnection():
     print('Connected.')
     
     # initialize session variables
-    if 'user' not in session:
-    	session['user'] = None
-	session['currentRoom'] = 'defaultRoom'
-    
-    print("Printing all tracks...")
-    # for track in tracks.find():
-    #     pprint.pprint(track)
-    print("Just kidding.  There's a lot.")
-  
+    session['user'] = None
+    session['currentRoom'] = 'defaultRoom'
 	
 @socketio.on('findTrack')
 def findTrack(track):
@@ -59,7 +53,7 @@ def debug():
 	for index in custom_index:
 		# iterate vertically (low->high)
 		for i in range(1,4):
-			# add the track to payload
+			# add the track to object
 			tmpTrack = {
 				'_id': count,
 				'title': index + str(i) + ' Full',
@@ -84,7 +78,7 @@ def debug():
 				tmpTrack['subtracks'].append(tmpSub)
 				count = count + 1
 			
-			# fire payload
+			# append the new object
 			inserted_tracks.append(tmpTrack)
 	
 	print("Would have inserted these tracks: ")
@@ -164,7 +158,7 @@ def login():
 def logout():
 	print("Entered logout on server.py")
 	print("Setting session variables to default...")
-	session['user'] = None
+	session.clear()
 	print("Done.")
 	
 	return render_template("index.html")

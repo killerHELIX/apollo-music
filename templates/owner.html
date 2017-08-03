@@ -18,9 +18,11 @@
         <div class="container">
             <div class="row text-center">
                 <h2>Current Playlist</h2>
-
-                <p class="lead" style="display: inline-block">Room: {{ session['currentRoom'] }}</p>
-                <button type="button" class="btn btn-default btn-md">Update Room</button>
+                {% if session['currentRoom'] %}
+                <p class="lead" style="display: inline-block">Current Room: <b>{{ session['currentRoom'] }}</b></p>
+                {% else %}
+                <p class="lead" style="display: inline-block">Current Room has no value</b></p>
+                {% endif %}
 
             <p class="lead">Playback here is synchronized across all listeners.</p>
             
